@@ -1,28 +1,15 @@
 <?php
 require_once("templates/_header.php");
 require_once("config/database.php");
+require_once("libs/functions.php");
 
 if ($_POST) {
   try {
     $stmt = $pdo->prepare("INSERT INTO products(name, description, price, created, modified) VALUES(:name, :description, :price, :created, :modified)");
 
-    $stmt->bindParam(':name',
-      htmlspecialchars(
-        strip_tags($_POST['name'])
-      )
-    );
-
-    $stmt->bindParam(':description',
-      htmlspecialchars(
-        strip_tags($_POST['description'])
-      )
-    );
-
-    $stmt->bindParam(':price',
-      htmlspecialchars(
-        strip_tags($_POST['price'])
-      )
-    );
+    bindAndCheck($stmt, 'name');
+    bindAndCheck($stmt, 'description');
+    bindAndCheck($stmt, 'price');
 
     $stmt->bindParam(':created',
       date('Y-m-d H:i:s')
@@ -32,11 +19,9 @@ if ($_POST) {
       date('Y-m-d H:i:s')
     );
 
-    if ($stmt->execute()) {
-      echo "<div>Record was saved successfully.</div>";
-    } else {
-      echo "<div>Unable to save record.</div>";
-    }
+    if ($stmt->execute()) echo "<div>Record was saved successfully.</div>";
+    else echo "<div>Unable to save record.</div>";
+
   } catch (PDOException $e) {
     die("<h1>ERROR:</h1>" . $e->getMessage());
   }
