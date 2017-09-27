@@ -19,7 +19,7 @@ if ($_POST) {
       date('Y-m-d H:i:s')
     );
 
-    if ($stmt->execute()) echo "<div>Record was saved successfully.</div>";
+    if ($stmt->execute()) echo "<div>" . $stmt->rowCount(). " rows affected. Record was saved successfully.</div>";
     else echo "<div>Unable to save record.</div>";
 
   } catch (PDOException $e) {
